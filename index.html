@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EventPass – Online Event Registration & Check-In</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <div>
+      <h1>EventPass</h1>
+      <div class="subtitle">Online Event Registration · QR Ticket · Check-In</div>
+    </div>
+    <div class="subtitle">ITDI110 · Checkpoint 2 Prototype</div>
+  </header>
+
+  <nav id="main-nav">
+    <button class="active" data-panel="dashboard">Dashboard</button>
+    <button data-panel="create-event">Create Event</button>
+    <button data-panel="add-ticket-type">Ticket Types</button>
+    <button data-panel="register">Register</button>
+    <button data-panel="checkin">Check-In</button>
+    <button data-panel="reports">Reports</button>
+  </nav>
+
+  <main>
+    <!-- DASHBOARD -->
+    <section id="panel-dashboard" class="panel active">
+      <div class="stats" id="stats-bar">
+        <div class="stat-card">
+          <div class="value" id="stat-events">0</div>
+          <div class="label">Events</div>
+        </div>
+        <div class="stat-card">
+          <div class="value" id="stat-registrations">0</div>
+          <div class="label">Registrations</div>
+        </div>
+        <div class="stat-card">
+          <div class="value" id="stat-checkins">0</div>
+          <div class="label">Checked In</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Events</h2>
+        <div id="event-list" class="event-list">
+          <div class="empty-state">
+            <p>No events yet. Create one from the <strong>Create Event</strong> tab.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CREATE EVENT -->
+    <section id="panel-create-event" class="panel">
+      <div class="card">
+        <h2>Create New Event</h2>
+        <form id="form-create-event">
+          <div class="form-grid">
+            <div>
+              <label for="evt-title">Event Title *</label>
+              <input type="text" id="evt-title" required placeholder="e.g. Tech Conference 2026" />
+            </div>
+            <div>
+              <label for="evt-date">Date *</label>
+              <input type="date" id="evt-date" required />
+            </div>
+            <div>
+              <label for="evt-venue">Venue</label>
+              <input type="text" id="evt-venue" placeholder="e.g. Vanuatu Convention Centre" />
+            </div>
+            <div>
+              <label for="evt-capacity">Overall Capacity *</label>
+              <input type="number" id="evt-capacity" required min="1" placeholder="e.g. 200" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create Event</button>
+          </div>
+        </form>
+        <div id="create-event-result"></div>
+      </div>
+    </section>
+
+    <!-- ADD TICKET TYPE -->
+    <section id="panel-add-ticket-type" class="panel">
+      <div class="card">
+        <h2>Add Ticket Type to Event</h2>
+        <form id="form-add-ticket-type">
+          <div class="form-grid">
+            <div>
+              <label for="tt-event">Event *</label>
+              <select id="tt-event" required>
+                <option value="">— Select event —</option>
+              </select>
+            </div>
+            <div>
+              <label for="tt-name">Type Name *</label>
+              <input type="text" id="tt-name" required placeholder="General / VIP / Early-Bird" />
+            </div>
+            <div>
+              <label for="tt-price">Price (AUD) *</label>
+              <input type="number" id="tt-price" required min="0" step="0.01" placeholder="0.00" />
+            </div>
+            <div>
+              <label for="tt-quota">Quota *</label>
+              <input type="number" id="tt-quota" required min="1" placeholder="e.g. 50" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Add Ticket Type</button>
+          </div>
+        </form>
+        <div id="add-tt-result"></div>
+      </div>
+    </section>
+
+    <!-- REGISTER -->
+    <section id="panel-register" class="panel">
+      <div class="card">
+        <h2>Attendee Registration</h2>
+        <form id="form-register">
+          <div class="form-grid">
+            <div>
+              <label for="reg-event">Event *</label>
+              <select id="reg-event" required>
+                <option value="">— Select event —</option>
+              </select>
+            </div>
+            <div>
+              <label for="reg-ticket-type">Ticket Type *</label>
+              <select id="reg-ticket-type" required>
+                <option value="">— Select ticket type —</option>
+              </select>
+            </div>
+            <div>
+              <label for="reg-name">Full Name *</label>
+              <input type="text" id="reg-name" required placeholder="Your name" />
+            </div>
+            <div>
+              <label for="reg-email">Email *</label>
+              <input type="email" id="reg-email" required placeholder="you@example.com" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-success">Register &amp; Get Ticket</button>
+          </div>
+        </form>
+        <div id="register-result"></div>
+      </div>
+    </section>
+
+    <!-- CHECK-IN -->
+    <section id="panel-checkin" class="panel">
+      <div class="card">
+        <h2>Check-In Staff – Scan / Enter Ticket</h2>
+        <form id="form-checkin">
+          <div class="form-grid">
+            <div style="grid-column: 1 / -1;">
+              <label for="ci-code">Ticket ID or QR Code *</label>
+              <input type="text" id="ci-code" required placeholder="Paste ticket ID or QR payload here" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Validate &amp; Check In</button>
+          </div>
+        </form>
+        <div id="checkin-result"></div>
+      </div>
+
+      <div class="card">
+        <h2>Today's Check-Ins (<span id="ci-count">0</span>)</h2>
+        <div id="checkin-list">
+          <div class="empty-state"><p>No check-ins yet.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPORTS -->
+    <section id="panel-reports" class="panel">
+      <div class="card">
+        <h2>Event Reports</h2>
+        <div class="form-grid" style="margin-bottom: 1rem;">
+          <div>
+            <label for="rpt-event">Select Event</label>
+            <select id="rpt-event">
+              <option value="">— Select event —</option>
+            </select>
+          </div>
+        </div>
+        <div id="report-content">
+          <div class="empty-state"><p>Select an event to view its registration report.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    EventPass · ITDI110 Object-Oriented Programming &amp; Software Development · Checkpoint 2
+  </footer>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
